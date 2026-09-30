@@ -32,9 +32,8 @@ pipeline {
         stage('Deploy Dist') {
             steps {
                 sh '''
-                    sudo -n -H -u DevOps mkdir -p /opt/deployment/react
-                    sudo -n -H -u DevOps rm -rf /opt/deployment/react/*
-                    sudo -n -H -u DevOps cp -r dist/. /opt/deployment/react/
+                    rm -rf /opt/deployment/react/*
+                    cp -r dist/. /opt/deployment/react/
                 '''
             }
         }
