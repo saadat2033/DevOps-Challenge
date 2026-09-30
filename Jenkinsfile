@@ -21,6 +21,32 @@ pipeline {
             }
         }
 
+        stage('Stop current deployment') {
+            steps {
+                sh '''
+                    sudo -n -H -u DevOps /usr/bin/pm2 stop react-app || true
+                '''
+            }
+        }
+
+        stage('Deploy Dist') {
+            steps {
+                sh '''
+                    sudo -n -H -u DevOps mkdir -p /opt/deployment/react
+                    sudo -n -H -u DevOps rm -rf /opt/deployment/react/*
+                    sudo -n -H -u DevOps cp -r dist/. /opt/deployment/react/
+                '''
+            }
+        }
+
+        stage('Restart PM2') {
+            steps {
+                sh '''
+                    sudo -n -H -u DevOps /usr/bin/pm2 restart react-app
+                '''
+            }
+        }
+
         stage('Upload to S3') {
             steps {
                 withCredentials([
